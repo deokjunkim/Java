@@ -1,6 +1,8 @@
 package calender;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -59,12 +61,25 @@ public class Calender {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(3%2);
+		
+		System.out.println("반복 횟수를 입력하세요");
 		Calender cal = new Calender();
-		System.out.println("월을 입력하세요 ");
 		Scanner scanner = new Scanner(System.in);
-		int month = scanner.nextInt();
-		System.out.printf("%d월은 %d일까지 있습니다 ",month, cal.getMaxDaysOfMonth(month));
+		int loof = scanner.nextInt();
+		System.out.println("월을 입력하세요 ");
+		List<Integer> monthList = new ArrayList<Integer>();
+		
+		for(int i = 0; i < loof; i++) {
+			monthList.add(scanner.nextInt());
+		}
+		
+		for(int month : monthList) {
+			System.out.printf("%d월은 %d일까지 있습니다 \n",month, cal.getMaxDaysOfMonth(month));
+		}
+		
+		System.out.println("END");
+		
+		
 	}
 
 }
