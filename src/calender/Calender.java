@@ -62,20 +62,25 @@ public class Calender {
 
 	public static void main(String[] args) {
 		
-		System.out.println("반복 횟수를 입력하세요");
 		Calender cal = new Calender();
 		Scanner scanner = new Scanner(System.in);
-		int loof = scanner.nextInt();
-		System.out.println("월을 입력하세요 ");
-		List<Integer> monthList = new ArrayList<Integer>();
+		String prompted = "cal>";
+
 		
-		for(int i = 0; i < loof; i++) {
-			monthList.add(scanner.nextInt());
-		}
-		
-		for(int month : monthList) {
+		while(true) {
+			System.out.println("월을 입력하세요 ");
+			System.out.print(prompted);
+			int month = scanner.nextInt();
+			if(month == -1 ) {
+				break;
+			}
+			if(month > 12) {
+				continue;
+			}
 			System.out.printf("%d월은 %d일까지 있습니다 \n",month, cal.getMaxDaysOfMonth(month));
+
 		}
+			
 		
 		System.out.println("END");
 		
