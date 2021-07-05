@@ -8,9 +8,29 @@ import java.util.Scanner;
 
 public class Calender {
 	private static final int[] MAX_DAYS = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	private static final String[] DAYS = { "SU", "MO", "TU", "WN", "TH", "FR", "ST" };
 
 	public int getMaxDaysOfMonth(int month) {
 		return MAX_DAYS[month - 1];
+	}
+
+	public void printCalender(int year, int day) {
+		System.out.printf("   <<%4d년%3d월>>   \n", year, day);
+		for (String d : DAYS) {
+			System.out.printf("%3s", d);
+		}
+
+		System.out.print("\n----------------------\n");
+		for (int i = 1; i <= day; i++) {
+
+			System.out.printf("%3d", i);
+			
+			if (i % 7 == 0) {
+				System.out.print("\n");
+			}
+
+		}
+		System.out.print("\n\n");
 	}
 
 	public void printCalender() {
@@ -37,54 +57,12 @@ public class Calender {
 		String mon = scanner.next();
 		scanner.close();
 		Integer day = map.get(mon);
-//		System.out.println(Arrays.toString(days));
-
-		for (String d : days) {
-			System.out.print(d + "  ");
-		}
-
-		System.out.print("\n----------------------\n");
-		for (int i = 1; i <= day; i++) {
-
-			if (i / 10 == 0) {
-				System.out.print(" " + String.valueOf(i) + " ");
-			}
-
-			else {
-				System.out.print(String.valueOf(i) + " ");
-			}
-			if (i % 7 == 0) {
-				System.out.print("\n");
-			}
-
-		}
+		Calender cal = new Calender();
+		cal.printCalender(2021, day);
 	}
 
 	public static void main(String[] args) {
-		
-		Calender cal = new Calender();
-		Scanner scanner = new Scanner(System.in);
-		String prompted = "cal>";
 
-		
-		while(true) {
-			System.out.println("월을 입력하세요 ");
-			System.out.print(prompted);
-			int month = scanner.nextInt();
-			if(month == -1 ) {
-				break;
-			}
-			if(month > 12) {
-				continue;
-			}
-			System.out.printf("%d월은 %d일까지 있습니다 \n",month, cal.getMaxDaysOfMonth(month));
-
-		}
-			
-		
-		System.out.println("END");
-		
-		
 	}
 
 }
