@@ -17,19 +17,20 @@ public class Prompt {
 			System.out.println("년도를 입력하세요 ");
 			System.out.printf(YPROMT);
 			year = scanner.nextInt();
+			if (year == -1) {
+				break;
+			}
 			System.out.println("월을 입력하세요 ");
 			System.out.printf(MPROMT);
 			month = scanner.nextInt();
-			System.out.println("첫번째 요일을 입력하세요 (SU, MO, TU, WE, TH, FR, SA)");
-			System.out.printf(WPROMT);
-			weekday = scanner.next();
+
 			if (month == -1) {
 				break;
 			}
 			if (month > 12) {
 				continue;
 			}
-			cal.printCalender(year, month, weekday);
+			cal.printCalender(year, month);
 			// System.out.printf("%d월은 %d일까지 있습니다 \n",month, cal.getMaxDaysOfMonth(month));
 
 		}
@@ -37,7 +38,7 @@ public class Prompt {
 
 		System.out.println("END");
 	}
-
+	
 	public static void main(String[] args) {
 		Prompt prompt = new Prompt();
 		prompt.runPrompte();
