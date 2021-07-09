@@ -1,57 +1,62 @@
 package calender;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
 public class Prompt {
 	private final static String YPROMT = "YEAR> ";
 	private final static String MPROMT = "MONTH> ";
-	private final static String WPROMT = "WEEKDAY> ";
-	private final static String BASICPROMT  = "> ";
-	private static HashMap<String, ArrayList> map = new HashMap<String, ArrayList>();
+	private final static String BASICPROMT = "> ";
+	private static HashMap<String, Plan> map = new HashMap<String, Plan>();
+
+	public static void creatdFile() {
+		File file = new File("/scehdule.json");
+		try {
+			if (file.createNewFile()) {
+				System.out.println("File created");
+			} else {
+				System.out.println("File already exists");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
 
 	public static void getCalender() {
 		Calender cal = new Calender();
-		Scanner scanner = new Scanner(System.in);
-		int month = 1;
-		int year = 0;
-		String weekday = "";
-		
-		System.out.println("년도를 입력하세요 ");
-		System.out.printf(YPROMT);
-		year = scanner.nextInt();
-//		if (year == -1) {
-//			ret
-//		}
-		System.out.println("월을 입력하세요 ");
-		System.out.printf(MPROMT);
-		month = scanner.nextInt();
+		try (Scanner scanner = new Scanner(System.in)) {
+			int month = 1;
+			int year = 0;
+			System.out.println("년도를 입력하세요 ");
+			System.out.printf(YPROMT);
+			year = scanner.nextInt();
 
-//		if (month == -1) {
-//			break;
-//		}
-//		if (month > 12) {
-//			continue;
-//		}
-		cal.printCalender(year, month);
-		// System.out.printf("%d월은 %d일까지 있습니다 \n",month, cal.getMaxDaysOfMonth(month));
+			System.out.println("월을 입력하세요 ");
+			System.out.printf(MPROMT);
+			month = scanner.nextInt();
 
+			cal.printCalender(year, month);
 
-//		System.out.println("END");
+		}
+
 	}
 
 	public static void runHelp() {
 		System.out.println("+----------------------+");
-		System.out.println("| 1. 일정 등록       ");    
-		System.out.println("| 2. 일정 검색   ");        
+		System.out.println("| 1. 일정 등록       ");
+		System.out.println("| 2. 일정 검색   ");
 		System.out.println("| 3. 달력 보기");
 		System.out.println("| h. 도움말 q. 종료");
 		System.out.println("+----------------------+");
-		
+
 	}
-	
+
 	public static void scheduleRegistration() {
+
+//		try (Scanner scanner = new Scanner(System.in)) {
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("[일정 등록] 날짜를 입력하세요.");
 		System.out.printf(BASICPROMT);
@@ -59,72 +64,113 @@ public class Prompt {
 		System.out.println("일정을 입력하세요.");
 		System.out.printf(BASICPROMT);
 		String schedule = scanner.next();
+
+		Plan p = new Plan(date, schedule);
+
+//			System.out.println("참석자를 등록하시겠습니까? (Y/N)");
+//			System.out.printf(BASICPROMT);
+//			Boolean addPeople = false;
+//			addPeople = scanner.next().equals("Y") ? true : false;
+//			while (addPeople) {
+//				System.out.println("참석자 이름을 입력하세요. (exit : e)");
+//				System.out.printf(BASICPROMT);
+//				String name = scanner.next();
+//				if (name.equals("e")) {
+//					break;
+//				}
+//				int idx = map.size();
+//				System.out.printf("idx : %d\n", idx);
+//				p.addPeople(idx, name, p.people);
+//
+//			}
 		System.out.println("일정이 등록되었습니다.");
-		ArrayList scheduleArray = new ArrayList();
-		if(map.get(date) == null) {
-			scheduleArray.add(schedule);
-			map.put(date, scheduleArray);
-		}
-		else{
-			ArrayList scheduleArray2 = map.get(date);
-			scheduleArray2.add(schedule);
+
+		if (map.get(date) == null) {
+			map.put(date, p);
+		} else {
+			p = map.get(date);
+			p.addSchedule(schedule);
+			map.put(date, p);
 		}
 //		System.out.println(map);
 //		System.out.println(map.get(date));
+//		}
 	}
-	
+
 	public static void scheduleSearch() {
+//		try (Scanner scanner = new Scanner(System.in)) {
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("[일정 검색] 날짜를 입력하세요.");
 		System.out.printf(BASICPROMT);
 		String date = scanner.next();
-		
-		ArrayList scheduleArray = map.get(date);
-		int size = 0;
-		if (scheduleArray != null) {
-			size = scheduleArray.size();
-		}
 
-		System.out.printf("%d개의 일정이 있습니다. \n", size);
-		for(int i = 0 ; i < size  ; i ++) {
-			System.out.printf("%d. %s\n", i + 1, scheduleArray.get(i));
+		Plan p = map.get(date);
+
+		if (p != null) {
+			int ssize = p.getScheduleSize();
+
+			System.out.printf("%d개의 일정이 있습니다. \n", ssize);
+			for (int i = 0; i < ssize; i++) {
+				System.out.printf("%d. %s\n", i + 1, p.getSchedule().get(i));
+			}
+//				System.out.println(p.people);
+//				int psize = p.getPeopleSize();
+////				System.out.print(psize);
+//				if (psize > 0) {
+////					System.out.printf("[ 참석자 : ");
+//					for (int i = 0; i < psize; i++) {
+//						p.getPeople().get(i);
+//						System.out.printf("%d.참석자 : [", i + 1);
+//						ArrayList pList = p.getPeople().get(i);
+////						System.out.println(pList);
+//						for(int y = 0; y < pList.size(); y++) {
+//							System.out.printf("%s", pList.get(y));
+//							if(y == pList.size() -1){
+//								break;
+//							}
+//							System.out.print(", ");
+//						}
+//						System.out.printf("]\n");
+//					}
+//					
+//				}
 		}
-		
+//		}
+
 	}
-	
+
 	public static void help() {
 		System.out.println("help!!!");
 	}
-	
 
 	public static void main(String[] args) {
-		Prompt prompt = new Prompt();
-//		prompt.runPrompte();
-		prompt.runHelp();
-		Scanner scanner = new Scanner(System.in);
-		boolean out = true;
-		while(out) {
-			System.out.println("명령 (1, 2, 3, h, q)");
-			System.out.printf(BASICPROMT);
-			String method = scanner.next();
-			switch(method) {
-				case "1":
-					scheduleRegistration();
-					break;
-				case "2":
-					scheduleSearch();
-					break;
-				case "3":
-					getCalender();
-				case "h":
-					runHelp();
-					break;
-				case "q":
-					out = false;
-					break;
-			}
-			
-		}
-		scanner.close();
+		creatdFile();
+		// prompt.runPrompte();
+//		Prompt.runHelp();
+//		Scanner scanner = new Scanner(System.in);
+//		boolean out = true;
+//		while (out) {
+//			System.out.println("명령 (1, 2, 3, h, q)");
+//			System.out.printf(BASICPROMT);
+//			String method = scanner.next();
+//			switch (method) {
+//			case "1":
+//				scheduleRegistration();
+//				break;
+//			case "2":
+//				scheduleSearch();
+//				break;
+//			case "3":
+//				getCalender();
+//			case "h":
+//				runHelp();
+//				break;
+//			case "q":
+//				out = false;
+//				break;
+//			}
+//
+//		}
+//		scanner.close();
 	}
 }
