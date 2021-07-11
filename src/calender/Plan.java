@@ -55,4 +55,13 @@ public class Plan {
 	public int getPeopleSize() {
 		return this.people.size();
 	}
+
+	public String saveString() {
+		SimpleDateFormat formater = new SimpleDateFormat("yyy-MM-dd");
+		String sDate = formater.format(this.date);
+		String returnString  = sDate + "," + this.schedule.toString() + "\n";
+				
+		return returnString;
+		
+	}
 }

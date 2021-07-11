@@ -1,6 +1,8 @@
 package calender;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -9,17 +11,41 @@ public class Prompt {
 	private final static String YPROMT = "YEAR> ";
 	private final static String MPROMT = "MONTH> ";
 	private final static String BASICPROMT = "> ";
+	private final static String FILE_NAME = "Calender.dat";
 	private static HashMap<String, Plan> map = new HashMap<String, Plan>();
 
-	public static void creatdFile() {
-		File file = new File("/scehdule.json");
+	public static void creatdFile(Plan p) {
+
+		File file = new File(FILE_NAME);
+		String item = p.saveString();
 		try {
-			if (file.createNewFile()) {
-				System.out.println("File created");
-			} else {
-				System.out.println("File already exists");
-			}
+			FileWriter f = new FileWriter(file, true);
+			f.write(item);
+			f.close();
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public static void readFile() {
+		File file = new File(FILE_NAME);
+		if (!file.exists()) {
+			System.err.println("no save file");
+			return;
+		}
+		try {
+			Scanner s = new Scanner(file);
+			while (s.hasNext()) {
+				String line = s.nextLine();
+				String date = line.split(",")[0];
+				String schedule = line.split(",")[1];
+				Plan p = new Plan(date, schedule);
+				map.put(date, p);
+			}
+			System.out.print(map);
+
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 
@@ -66,7 +92,7 @@ public class Prompt {
 		String schedule = scanner.next();
 
 		Plan p = new Plan(date, schedule);
-
+		creatdFile(p);
 //			System.out.println("참석자를 등록하시겠습니까? (Y/N)");
 //			System.out.printf(BASICPROMT);
 //			Boolean addPeople = false;
@@ -134,6 +160,8 @@ public class Prompt {
 //					}
 //					
 //				}
+		} else {
+			System.out.print("일정이 없습니다.\n");
 		}
 //		}
 
@@ -144,33 +172,33 @@ public class Prompt {
 	}
 
 	public static void main(String[] args) {
-		creatdFile();
-		// prompt.runPrompte();
-//		Prompt.runHelp();
-//		Scanner scanner = new Scanner(System.in);
-//		boolean out = true;
-//		while (out) {
-//			System.out.println("명령 (1, 2, 3, h, q)");
-//			System.out.printf(BASICPROMT);
-//			String method = scanner.next();
-//			switch (method) {
-//			case "1":
-//				scheduleRegistration();
-//				break;
-//			case "2":
-//				scheduleSearch();
-//				break;
-//			case "3":
-//				getCalender();
-//			case "h":
-//				runHelp();
-//				break;
-//			case "q":
-//				out = false;
-//				break;
-//			}
-//
-//		}
-//		scanner.close();
+
+		Prompt.runHelp();
+		readFile();
+		Scanner scanner = new Scanner(System.in);
+		boolean out = true;
+		while (out) {
+			System.out.println("명령 (1, 2, 3, h, q)");
+			System.out.printf(BASICPROMT);
+			String method = scanner.next();
+			switch (method) {
+			case "1":
+				scheduleRegistration();
+				break;
+			case "2":
+				scheduleSearch();
+				break;
+			case "3":
+				getCalender();
+			case "h":
+				runHelp();
+				break;
+			case "q":
+				out = false;
+				break;
+			}
+
+		}
+		scanner.close();
 	}
 }
